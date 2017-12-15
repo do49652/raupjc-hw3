@@ -13,6 +13,7 @@ using Zadatak2.Models;
 using Zadatak2.Services;
 using Zadatak1;
 using TodoLibrary;
+using Zadatak2.Models.TodoViewModels;
 
 namespace Zadatak2
 {
@@ -38,6 +39,8 @@ namespace Zadatak2
             services.AddScoped<TodoDbContext>(s => new TodoDbContext(Configuration.GetConnectionString("DefaultConnection")));
             var todoSqlRepository = new TodoSqlRepository(Configuration.GetConnectionString("DefaultConnection"));
             services.AddTransient<ITodoRepository>(t => todoSqlRepository);
+            var todoItemLabelRepository = new TodoItemLabelRepository(Configuration.GetConnectionString("DefaultConnection"));
+            services.AddTransient<ITodoItemLabelRepository>(l => todoItemLabelRepository);
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
@@ -67,7 +70,7 @@ namespace Zadatak2
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Todo}/{action=Index}/{id?}");
             });
         }
     }

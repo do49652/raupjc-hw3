@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -17,17 +18,19 @@ namespace Zadatak2.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ITodoRepository _repository;
+        private readonly ITodoItemLabelRepository _labelRepository;
 
-        public TodoController(UserManager<ApplicationUser> userManager, ITodoRepository repository)
+        public TodoController(UserManager<ApplicationUser> userManager, ITodoRepository repository, ITodoItemLabelRepository labelRepository)
         {
             _userManager = userManager;
             _repository = repository;
+            _labelRepository = labelRepository;
         }
 
         public async Task<ViewResult> Index()
         {
             var currentUser = await _userManager.GetUserAsync(HttpContext.User);
-            var todoitems = _repository.GetActive(Guid.Parse(currentUser.Id));
+            var todoitems = _repository.GetActive(Guid.Parse(currentUser.Id)).OrderBy(t => t.DateDue);
 
             var indexViewModel = new IndexViewModel()
             {
@@ -45,17 +48,20 @@ namespace Zadatak2.Controllers
             return View(indexViewModel);
         }
 
-        public IActionResult Add()
+        public IActionResult Add(AddTodoViewModel todoViewModel)
         {
-            return View();
+            if (todoViewModel == null)
+                todoViewModel = new AddTodoViewModel();
+            return View(todoViewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(TodoViewModel todoViewModel)
+        public async Task<IActionResult> AddNew(AddTodoViewModel todoViewModel)
         {
-            if (todoViewModel.Text.Length == 0)
+            if (!ModelState.IsValid)
             {
-                return View(todoViewModel);
+                todoViewModel.Message = "Text field must not be empty.";
+                return RedirectToAction("Add", todoViewModel);
             }
 
             var currentUser = await _userManager.GetUserAsync(HttpContext.User);
@@ -63,7 +69,17 @@ namespace Zadatak2.Controllers
             {
                 DateDue = todoViewModel.DateDue
             };
-            _repository.Add(todoItem);
+            _repository.Update(todoItem, Guid.Parse(currentUser.Id));
+
+            if (todoViewModel.Labels == null || todoViewModel.Labels.Trim().Length <= 0)
+                return RedirectToAction("Index");
+
+            var labels = new SortedSet<string>(todoViewModel.Labels.ToLower().Replace(",", " ").Replace("  ", " ").Trim().Split(' ').ToList());
+            foreach (var l in labels)
+            {
+                var label = new TodoItemLabel(l);
+                await _labelRepository.Update(label, todoItem);
+            }
 
             return RedirectToAction("Index");
         }
@@ -71,7 +87,7 @@ namespace Zadatak2.Controllers
         public async Task<ViewResult> Completed()
         {
             var currentUser = await _userManager.GetUserAsync(HttpContext.User);
-            var todoitems = _repository.GetCompleted(Guid.Parse(currentUser.Id));
+            var todoitems = _repository.GetCompleted(Guid.Parse(currentUser.Id)).OrderBy(t => t.DateDue);
 
             var completedViewModel = new CompletedViewModel()
             {

@@ -13,6 +13,5 @@ namespace Zadatak2.Models.TodoViewModels
         public DateTime DateCreated { get; set; }
         public List<TodoItemLabel> Labels { get; set; }
         public DateTime? DateDue { get; set; }
-
     }
 }

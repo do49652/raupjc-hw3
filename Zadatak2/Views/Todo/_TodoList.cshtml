@@ -9,19 +9,16 @@
             @if (todo.DateDue != null)
             {
                 var days = (todo.DateDue - DateTime.Today).Value.Days;
-                var str = $"{todo.DateDue.Value:yyyy-MM-dd} ";
-                if (todo.DateCompleted == null)
-                {
-                    str += days == 0 ? "(danas)" : (days == 1 ? "(sutra)" : $"(za {days} dana)");
-                }
-                @str
+                @(todo.DateCompleted == null ? $"{todo.DateDue.Value:yyyy-MM-dd} {(days == 0 ? "(danas)" : (days == 1 ? "(sutra)" : "(za " + days + " dana)"))}" : $"{todo.DateCompleted.Value:yyyy-MM-dd} ")
             }
+            <br>
+            @string.Join(" ",todo.Labels.Select(l => l.Value).ToList()).Trim()
             <br>
             <form asp-action=@(todo.DateCompleted == null ? @"Completed" : @"NotCompleted")>
                 <div class="form-group">
                     <input type="hidden" class="form-control" name="Id" value=@todo.Id />
                 </div>
-                <button class="btn btn-link" type="submit">@(todo.DateCompleted != null ? @"Remove from completed" : @"Mark as completed")</button>
+                <a onclick="$(this).closest('form').submit()">@(todo.DateCompleted != null ? @"Remove from completed" : @"Mark as completed")</a>
             </form>
         </div>
         <br>

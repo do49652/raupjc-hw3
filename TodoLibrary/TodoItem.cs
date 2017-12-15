@@ -68,16 +68,6 @@ namespace TodoLibrary
                    Id.Equals(item.Id);
         }
 
-        public static bool operator ==(TodoItem t1, TodoItem t2)
-        {
-            return t1.Equals(t2);
-        }
-
-        public static bool operator !=(TodoItem t1, TodoItem t2)
-        {
-            return !t1.Equals(t2);
-        }
-
         public override int GetHashCode()
         {
             return Id.GetHashCode();
@@ -108,5 +98,18 @@ namespace TodoLibrary
         ///     All TodoItems that are associated with this label
         /// </summary>
         public List<TodoItem> LabelTodoItems { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            return obj is TodoItemLabel label &&
+                   Value.Equals(label.Value);
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = 1700026361;
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Value);
+            return hashCode;
+        }
     }
 }

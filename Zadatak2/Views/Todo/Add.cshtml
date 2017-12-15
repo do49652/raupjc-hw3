@@ -1,29 +1,45 @@
-﻿@model Zadatak2.Models.TodoViewModels.TodoViewModel
+﻿@model Zadatak2.Models.TodoViewModels.AddTodoViewModel
 @{
     ViewBag.Title = "New Todo";
 }
 
 <h1>@ViewBag.Title</h1>
 
-<div class="col-md-4">
-    <form asp-action="Add">
-        <div class="form-group">
-            <div class="input-group">
-                <div class="input-group-addon">Text</div>
-                <input class="form-control" name="Text" type="text">
+<div class="row">
+    <div class="col-md-4">
+        @if (Model.Message != null)
+        {
+            <div class="alert alert-danger">
+                @Model.Message
             </div>
-        </div>
+        }
 
-        <div class="form-group">
-            <div class="input-group">
-                <div class="input-group-addon">Date due</div>
-                <input class="form-control" name="DateDue" type="date" value="@DateTime.Today.ToString("yyyy-MM-dd")">
+        <form asp-action="AddNew">
+            <div class="form-group">
+                <div class="input-group">
+                    <div class="input-group-addon">Text</div>
+                    <input class="form-control" name="Text" type="text" value="@Model.Text">
+                </div>
             </div>
-        </div>
 
-        <div align="right">
-            <button class="btn btn-default" asp-action="Index" type="button">Cancel</button>
-            <button class="btn btn-primary" type="submit">Submit</button>
-        </div>
-    </form>
+            <div class="form-group">
+                <div class="input-group">
+                    <div class="input-group-addon">Date due</div>
+                    <input class="form-control" name="DateDue" type="date" value="@(Model.DateDue != null ? Model.DateDue.Value.ToString("yyyy-MM-dd") : DateTime.Today.ToString("yyyy-MM-dd"))">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input id="labels" name="Labels" type="hidden" value="@Model.Labels">
+            </div>
+
+            <div align="right">
+                <a asp-action="Index"><button class="btn btn-default" type="button">Cancel</button></a>
+                <button class="btn btn-primary" type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+    <div id="tags" class="col-md-8 input-group">
+        <input type="text" value="" placeholder="Add a tag" />
+    </div>
 </div>
