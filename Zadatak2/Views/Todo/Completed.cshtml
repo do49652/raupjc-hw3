@@ -1,0 +1,11 @@
+﻿@model Zadatak2.Models.TodoViewModels.CompletedViewModel
+@{
+    ViewBag.Title = "Completed Todos";
+}
+
+<h1>@ViewBag.Title</h1>
+
+<a asp-action="Index">See active todos</a>
+<br><br><hr>
+
+@await Html.PartialAsync("_TodoList", Model.TodoViewModels)

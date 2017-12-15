@@ -8,13 +8,16 @@ namespace Zadatak1
 {
     public class TodoSqlRepository : ITodoRepository
     {
-        private const string ConnectionString =
-                "Server=(localdb)\\mssqllocaldb;Database=TodoDbContext;Trusted_Connection=True;MultipleActiveResultSets=true"
-            ;
+        private static string _connectionString = "Server=(localdb)\\mssqllocaldb;Database=TodoDbContext;Trusted_Connection=True;MultipleActiveResultSets=true";
+
+        public TodoSqlRepository(string cnnstr)
+        {
+            _connectionString = cnnstr;
+        }
 
         public TodoItem Get(Guid todoId, Guid userId)
         {
-            using (var db = new TodoDbContext(ConnectionString))
+            using (var db = new TodoDbContext(_connectionString))
             {
                 var todoItem = db.TodoItem.Include(k => k.Labels).FirstOrDefault(s => s.Id.Equals(todoId));
 
@@ -30,9 +33,9 @@ namespace Zadatak1
 
         public void Add(TodoItem todoItem)
         {
-            using (var db = new TodoDbContext(ConnectionString))
+            using (var db = new TodoDbContext(_connectionString))
             {
-                if (db.TodoItem.Contains(todoItem))
+                if (db.TodoItem.Local.Contains(todoItem))
                     throw new DuplicateTodoItemException("duplicate id: " +
                                                          db.TodoItem.FirstOrDefault(s => s.Equals(todoItem)));
 
@@ -48,7 +51,7 @@ namespace Zadatak1
             if (todoItem == null)
                 return false;
 
-            using (var db = new TodoDbContext(ConnectionString))
+            using (var db = new TodoDbContext(_connectionString))
             {
                 db.TodoItem.Remove(todoItem);
                 db.SaveChanges();
@@ -66,7 +69,7 @@ namespace Zadatak1
                 return;
             }
 
-            using (var db = new TodoDbContext(ConnectionString))
+            using (var db = new TodoDbContext(_connectionString))
             {
                 db.Entry(todoItem).State = EntityState.Modified;
                 db.SaveChanges();
@@ -80,7 +83,7 @@ namespace Zadatak1
             if (todoItem == null || !todoItem.MarkAsCompleted())
                 return false;
 
-            using (var db = new TodoDbContext(ConnectionString))
+            using (var db = new TodoDbContext(_connectionString))
             {
                 db.Entry(todoItem).State = EntityState.Modified;
                 db.SaveChanges();
@@ -90,7 +93,7 @@ namespace Zadatak1
 
         public List<TodoItem> GetAll(Guid userId)
         {
-            using (var db = new TodoDbContext(ConnectionString))
+            using (var db = new TodoDbContext(_connectionString))
             {
                 return db.TodoItem.Include(k => k.Labels).OrderByDescending(s => s.DateCreated).ToList();
             }
@@ -98,7 +101,7 @@ namespace Zadatak1
 
         public List<TodoItem> GetActive(Guid userId)
         {
-            using (var db = new TodoDbContext(ConnectionString))
+            using (var db = new TodoDbContext(_connectionString))
             {
                 return db.TodoItem.Include(k => k.Labels).Where(s => !s.IsCompleted).ToList();
             }
@@ -106,7 +109,7 @@ namespace Zadatak1
 
         public List<TodoItem> GetCompleted(Guid userId)
         {
-            using (var db = new TodoDbContext(ConnectionString))
+            using (var db = new TodoDbContext(_connectionString))
             {
                 return db.TodoItem.Include(k => k.Labels).Where(s => s.IsCompleted).ToList();
             }
@@ -114,7 +117,7 @@ namespace Zadatak1
 
         public List<TodoItem> GetFiltered(Func<TodoItem, bool> filterFunction, Guid userId)
         {
-            using (var db = new TodoDbContext(ConnectionString))
+            using (var db = new TodoDbContext(_connectionString))
             {
                 return db.TodoItem.Include(k => k.Labels).AsEnumerable().Where(filterFunction).ToList();
             }

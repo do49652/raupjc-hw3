@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoLibrary", "TodoLibrary\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenericListLibrary", "GenericListLibrary\GenericListLibrary.csproj", "{4C3BCF90-4D0C-4097-9930-5456B297D9F4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zadatak2", "Zadatak2\Zadatak2.csproj", "{D346CC61-B910-4793-BF78-73054A25BEC4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{4C3BCF90-4D0C-4097-9930-5456B297D9F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C3BCF90-4D0C-4097-9930-5456B297D9F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4C3BCF90-4D0C-4097-9930-5456B297D9F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D346CC61-B910-4793-BF78-73054A25BEC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D346CC61-B910-4793-BF78-73054A25BEC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D346CC61-B910-4793-BF78-73054A25BEC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D346CC61-B910-4793-BF78-73054A25BEC4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

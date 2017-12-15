@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection.Emit;
 
 namespace TodoLibrary
 {
@@ -30,7 +31,11 @@ namespace TodoLibrary
         public Guid Id { get; set; }
         public string Text { get; set; }
 
-        public bool IsCompleted => DateCompleted.HasValue;
+        public bool IsCompleted
+        {
+            get => DateCompleted != null;
+            set => DateCompleted = value ? DateTime.Now : (DateTime?)null;
+        }
 
         public DateTime? DateCompleted { get; set; }
         public DateTime DateCreated { get; set; }
@@ -63,6 +68,16 @@ namespace TodoLibrary
                    Id.Equals(item.Id);
         }
 
+        public static bool operator ==(TodoItem t1, TodoItem t2)
+        {
+            return t1.Equals(t2);
+        }
+
+        public static bool operator !=(TodoItem t1, TodoItem t2)
+        {
+            return !t1.Equals(t2);
+        }
+
         public override int GetHashCode()
         {
             return Id.GetHashCode();
@@ -75,6 +90,10 @@ namespace TodoLibrary
     /// </summary>
     public class TodoItemLabel
     {
+        public TodoItemLabel()
+        {
+        }
+
         public TodoItemLabel(string value)
         {
             Id = Guid.NewGuid();

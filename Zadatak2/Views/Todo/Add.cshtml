@@ -1,0 +1,29 @@
+﻿@model Zadatak2.Models.TodoViewModels.TodoViewModel
+@{
+    ViewBag.Title = "New Todo";
+}
+
+<h1>@ViewBag.Title</h1>
+
+<div class="col-md-4">
+    <form asp-action="Add">
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon">Text</div>
+                <input class="form-control" name="Text" type="text">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon">Date due</div>
+                <input class="form-control" name="DateDue" type="date" value="@DateTime.Today.ToString("yyyy-MM-dd")">
+            </div>
+        </div>
+
+        <div align="right">
+            <button class="btn btn-default" asp-action="Index" type="button">Cancel</button>
+            <button class="btn btn-primary" type="submit">Submit</button>
+        </div>
+    </form>
+</div>
