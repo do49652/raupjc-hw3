@@ -1,26 +1,49 @@
-﻿@model List<Zadatak2.Models.TodoViewModels.TodoViewModel>
+﻿@using System.Globalization
+@model List<Zadatak2.Models.TodoViewModels.TodoViewModel>
 
 <div>
     @foreach (var todo in Model)
     {
         <div>
-            <b>@todo.Text</b>
+            <label>@todo.Text</label>
+            @foreach (var l in todo.Labels.Select(l => l.Value).OrderBy(l => l).ToList())
+            {
+                <span class="label label-info">@l</span>
+            }
             <br>
             @if (todo.DateDue != null)
             {
                 var days = (todo.DateDue - DateTime.Today).Value.Days;
-                @(todo.DateCompleted == null ? $"{todo.DateDue.Value:yyyy-MM-dd} {(days == 0 ? "(danas)" : (days == 1 ? "(sutra)" : "(za " + days + " dana)"))}" : $"{todo.DateCompleted.Value:yyyy-MM-dd} ")
+
+                <p>
+                    @($"{todo.DateDue.Value.ToString("dd. MMMM yyyy.", new CultureInfo("hr-HR"))}")
+
+                    @if (todo.DateCompleted == null)
+                    {
+                        if (days < 2)
+                        {
+                            <span class="text-danger">
+                                @($"{(days == 0 ? "(danas)" : (days == 1 ? "(sutra)" : (days < 0 ? "(prije " + -days + " dana)" : "(za " + days + " dana)")))}")
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="">
+                                @($"(za " + days + " dana)")
+                            </span>
+                        }
+                    }
+                </p>
+
+
+
             }
-            <br>
-            @string.Join(" ",todo.Labels.Select(l => l.Value).ToList()).Trim()
-            <br>
-            <form asp-action=@(todo.DateCompleted == null ? @"Completed" : @"NotCompleted")>
+            <form asp-controller="Todo" asp-action=@(todo.DateCompleted == null ? @"Completed" : @"NotCompleted")>
                 <div class="form-group">
                     <input type="hidden" class="form-control" name="Id" value=@todo.Id />
+                    <a href="#" onclick="$(this).closest('form').submit()">@(todo.DateCompleted != null ? @"Remove from completed" : @"Mark as completed")</a>
                 </div>
-                <a onclick="$(this).closest('form').submit()">@(todo.DateCompleted != null ? @"Remove from completed" : @"Mark as completed")</a>
             </form>
         </div>
-        <br>
     }
 </div>

@@ -95,7 +95,7 @@ namespace Zadatak1
         {
             using (var db = new TodoDbContext(_connectionString))
             {
-                return db.TodoItem.Include(k => k.Labels).OrderByDescending(s => s.DateCreated).ToList();
+                return db.TodoItem.Where(t => t.UserId.Equals(userId)).Include(k => k.Labels).OrderByDescending(s => s.DateCreated).ToList();
             }
         }
 
@@ -103,7 +103,7 @@ namespace Zadatak1
         {
             using (var db = new TodoDbContext(_connectionString))
             {
-                return db.TodoItem.Include(k => k.Labels).Where(s => !s.IsCompleted).ToList();
+                return db.TodoItem.Where(t => t.UserId.Equals(userId)).Include(k => k.Labels).Where(s => !s.IsCompleted).ToList();
             }
         }
 
@@ -111,7 +111,7 @@ namespace Zadatak1
         {
             using (var db = new TodoDbContext(_connectionString))
             {
-                return db.TodoItem.Include(k => k.Labels).Where(s => s.IsCompleted).ToList();
+                return db.TodoItem.Where(t => t.UserId.Equals(userId)).Include(k => k.Labels).Where(s => s.IsCompleted).ToList();
             }
         }
 
@@ -119,7 +119,7 @@ namespace Zadatak1
         {
             using (var db = new TodoDbContext(_connectionString))
             {
-                return db.TodoItem.Include(k => k.Labels).AsEnumerable().Where(filterFunction).ToList();
+                return db.TodoItem.Where(t => t.UserId.Equals(userId)).Include(k => k.Labels).AsEnumerable().Where(filterFunction).ToList();
             }
         }
     }

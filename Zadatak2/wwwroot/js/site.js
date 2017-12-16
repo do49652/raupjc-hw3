@@ -17,7 +17,7 @@ $(function () {
             var txt = this.value.replace(/[^a-z0-9\+\-\.\#]/ig, "").toLowerCase();
             if (txt.length > 0) {
                 if (tags.indexOf(txt) == -1) {
-                    $("#tags").prepend("<span>" + txt + "</span>");
+                    $("#tags input").before("<span>" + txt + "</span>");
                     $("#labels").val($("#labels").val() + " " + txt);
                     tags.push(txt);
                 }

@@ -6,6 +6,6 @@
 <h1>@ViewBag.Title</h1>
 
 <a asp-action="Index">See active todos</a>
-<br><br><hr>
+<br><hr>
 
 @await Html.PartialAsync("_TodoList", Model.TodoViewModels)

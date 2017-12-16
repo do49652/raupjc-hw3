@@ -5,7 +5,7 @@
 
 <h1>@ViewBag.Title</h1>
 
-<a asp-action="Add">Add new todo</a> <a asp-action="Completed">See completed todos</a>
-<br><br><hr>
+<a asp-action="Add">Add new todo</a> &emsp; <a asp-action="Completed">See completed todos</a>
+<br><hr>
 
 @await Html.PartialAsync("_TodoList", Model.TodoViewModels)
