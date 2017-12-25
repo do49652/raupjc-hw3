@@ -23,7 +23,7 @@ namespace Zadatak2
                 .UseStartup<Startup>()
                 .UseSerilog((context, logger) =>
                 {
-                    var cnnstr = context.Configuration["DefaultConnection"];
+                    var cnnstr = context.Configuration.GetConnectionString("DefaultConnection");
 
                     logger.MinimumLevel.Error()
                         .Enrich.FromLogContext()
